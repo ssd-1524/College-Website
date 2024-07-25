@@ -41,31 +41,31 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: '/app',
+    path: '',
     element: <Home />,
     children: [
       {
-        path: 'pcp',
+        path: '/app/pcp',
         element: <Doc1 />,
       },
       {
-        path: 'dentist',
+        path: '/app/dentist',
         element: <Doc2 />,
       },
       {
-        path: 'psychologist',
+        path: '/app/psychologist',
         element: <Doc3 />,
       },
       {
-        path: 'dermatologist',
+        path: '/app/dermatologist',
         element: <Doc4 />,
       },
       {
-        path: 'allergist',
+        path: '/app/allergist',
         element: <Doc5 />,
       },
       {
-        path: 'physical-therapist',
+        path: '/app/physical-therapist',
         element: <Doc6 />,
       },
     ],

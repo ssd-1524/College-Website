@@ -7,32 +7,32 @@ function DAHeader() {
       <nav className='w-full flex h-10'>  
         <ul className='w-full flex h-10 justify-around'>
           <li>
-            <NavLink to="/app/pcp" className={({ isActive }) => isActive ? "underline" : ""}>
+            <NavLink to="/app/pcp" className={({ isActive }) =>`text-lg font-semibold ${isActive ? "underline" : ""}`} style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>
               Primary Care Physician
             </NavLink>
           </li>
           <li>
-            <NavLink to="/app/dentist" className={({ isActive }) => isActive ? "underline" : ""}>
+            <NavLink to="/app/dentist" className={({ isActive }) =>`text-lg font-semibold ${isActive ? "underline" : ""}`} style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>
               Dentist
             </NavLink>
           </li>
           <li>
-            <NavLink to="/app/psychologist" className={({ isActive }) => isActive ? "underline" : ""}>
+            <NavLink to="/app/psychologist" className={({ isActive }) =>`text-lg font-semibold ${isActive ? "underline" : ""}`} style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>
               Psychologist
             </NavLink>
           </li>
           <li>
-            <NavLink to="/app/dermatologist" className={({ isActive }) => isActive ? "underline" : ""}>
+            <NavLink to="/app/dermatologist" className={({ isActive }) =>`text-lg font-semibold ${isActive ? "underline" : ""}`} style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>
               Dermatologist
             </NavLink>
           </li>
           <li>
-            <NavLink to="/app/allergist" className={({ isActive }) => isActive ? "underline" : ""}>
+            <NavLink to="/app/allergist" className={({ isActive }) =>`text-lg font-semibold ${isActive ? "underline" : ""}`} style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>
               Allergist
             </NavLink>
           </li>
           <li>
-            <NavLink to="/app/physical-therapist" className={({ isActive }) => isActive ? "underline" : ""}>
+            <NavLink to="/app/physical-therapist" className={({ isActive }) =>`text-lg font-semibold ${isActive ? "underline" : ""}`} style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>
               Physical Therapist
             </NavLink>
           </li>

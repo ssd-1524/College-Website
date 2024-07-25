@@ -26,7 +26,7 @@ function Card({ image, title, price, id }) {
       <img className="w-full h-56 object-cover" src={image} alt={title} />
       <div className="px-6 py-4 text-center flex-1">
         <div className="font-bold text-xl mb-2">{title}</div>
-        <p className="text-gray-700 text-base">{price}</p>
+        <p className="text-gray-700 text-base">₹{price}</p>
       </div>
       <div className="px-6 pb-4 text-center">
         {!inCart ? (

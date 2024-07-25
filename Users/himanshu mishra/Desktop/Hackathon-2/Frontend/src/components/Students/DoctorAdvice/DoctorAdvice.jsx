@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function DoctorAdvice() {
   return (
-    <div className="mx-5 mt-8 p-4 bg-white rounded-lg">
+    <div id="advice" className="mx-5 mt-8 p-4 bg-white rounded-lg">
       <h2 className="text-4xl font-bold text-teal-600 mb-10 underline" style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>Dr. Advice</h2>
       <div className="p-8 bg-white rounded-3xl border shadow-2xl">
         <h3 className="text-center text-3xl font-semibold text-gray-700 mb-16">
