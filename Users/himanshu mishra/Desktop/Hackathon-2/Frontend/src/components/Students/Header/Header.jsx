@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.jpeg'; // Ensure the logo path is correct
 import account from '../../../svgs/youracc.svg';
+import ProfileCard from '../ProfileCard/ProfileCard';
 
 export default function Header({
   scrollToAppointment,
@@ -9,6 +10,17 @@ export default function Header({
   scrollToReport
 }) {
   const [activeSection, setActiveSection] = useState('');
+  const [profileCard, setProfileCard] = useState(false);
+
+  const toggleCard = () => {
+    setProfileCard((prev) => !prev);
+  };
+
+  const handleClickOutside = (event) => {
+    if (event.target.id === 'profile-overlay') {
+      setProfileCard(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +42,18 @@ export default function Header({
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (profileCard) {
+      document.addEventListener('click', handleClickOutside);
+    } else {
+      document.removeEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [profileCard]);
 
   return (
     <header className="shadow sticky z-50 top-0">
@@ -80,8 +104,13 @@ export default function Header({
                   Your Report
                 </button>
               </li>
-              <li className="flex items-center space-x-2">
-                <img src={account} className="h-16 w-16 cursor-pointer" alt="Account" />
+              <li className="relative">
+                <img onClick={toggleCard} src={account} className="h-16 w-16 cursor-pointer" alt="Account" />
+                {profileCard && (
+                  <div id="profile-overlay" className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+                    <ProfileCard />
+                  </div>
+                )}
               </li>
             </ul>
           </div>
