@@ -1,11 +1,12 @@
-import React,{useState} from 'react';
+import React,{useState} from 'react'
 import profile from '../../../svgs/profile.svg'
 import chat from '../../../svgs/chat.svg'
 import unread from '../../../svgs/unread.svg'
-import SChat from './Chat/SChat';
-import SDdata from './Data/Data.json'
+import Chat from './Chat/Chat';
+import ChatData from './Data/Data.json'
+import '../Appointments/scrollbar.css'
 
-export default function DoctorAdvice() {
+function Queries() {
   const [chatVisible, setChatVisible] = useState(false);
   const [selectedName, setSelectedName] = useState('');
 
@@ -21,13 +22,13 @@ export default function DoctorAdvice() {
   return (
     <div className='m-10'>
       <div className='w-full'>
-        <h1 className='m-6 text-4xl font-bold text-teal-600 mb-4 underline' style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>Dr. Advice</h1>
+        <h1 className='m-6 text-4xl font-bold text-teal-600 mb-4 underline' style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>Queries</h1>
         <div className='w-full border rounded-3xl flex flex-col overflow-y-auto scrollbar-custom' style={{ maxHeight: '35rem' }}>
           {chatVisible ? (
-            <SChat handle={handleBack} name={selectedName} />
+            <Chat handle={handleBack} name={selectedName} />
           ) : (
             <>
-            {SDdata.map((item)=>( 
+            {ChatData.map((item)=>( 
               <div onClick={() => handleChat(item.name)} className='flex items-center justify-between mx-10 my-3 border rounded-xl p-4 cursor-pointer hover:bg-slate-100'>
               <div className='flex items-center gap-5'>
                 <img src={profile} className='size-14' />
@@ -50,5 +51,7 @@ export default function DoctorAdvice() {
         </div>
       </div>
     </div>
-  );
+  )
 }
+
+export default Queries

@@ -1,47 +1,54 @@
 import React, {useEffect, useState} from 'react'
 import './doctorsisu.css'
 import Popup from '../Popup/Popup';
+import { useNavigate } from 'react-router-dom';
 
 function DoctorSISU() {
+    const navigate = useNavigate();
     const [isPopupVisible, setPopupVisible] = useState(false);
 
     useEffect(() => {
-        const signUpButton = document.getElementById('signUp');
-        const signInButton = document.getElementById('signIn');
-        const main = document.getElementById('main');
-    
-        if (signUpButton && signInButton && main) {
-          signUpButton.addEventListener('click', () => {
+      const signUpButton = document.getElementById('signUp');
+      const signInButton = document.getElementById('signIn');
+      const main = document.getElementById('main');
+  
+      if (signUpButton && signInButton && main) {
+        signUpButton.addEventListener('click', () => {
+          main.classList.add("right-panel-active");
+        });
+  
+        signInButton.addEventListener('click', () => {
+          main.classList.remove("right-panel-active");
+        });
+  
+        // Clean up event listeners on component unmount
+        return () => {
+          signUpButton.removeEventListener('click', () => {
             main.classList.add("right-panel-active");
           });
-    
-          signInButton.addEventListener('click', () => {
+  
+          signInButton.removeEventListener('click', () => {
             main.classList.remove("right-panel-active");
           });
-    
-          // Clean up event listeners on component unmount
-          return () => {
-            signUpButton.removeEventListener('click', () => {
-              main.classList.add("right-panel-active");
-            });
-    
-            signInButton.removeEventListener('click', () => {
-              main.classList.remove("right-panel-active");
-            });
-          };
-        }
-      }, []);
+        };
+      }
+    }, []);
 
     const handleSavePostClick = (event) => {
-        event.preventDefault();
-        setPopupVisible(true);
+      event.preventDefault();
+      setPopupVisible(true);
     };
 
     const handleContinue = (event) =>{
-        setPopupVisible(false);
-        const changebutton = document.querySelector('#Ambulance-Button')
-        changebutton.style.backgroundColor = "Orange";
-        changebutton.innerText = "Track Your Ambulance"
+      setPopupVisible(false);
+      const changebutton = document.querySelector('#Ambulance-Button')
+      changebutton.style.backgroundColor = "Orange";
+      changebutton.innerText = "Track Your Ambulance"
+    }
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      navigate('/doc')
     }
 
   return (
@@ -57,7 +64,7 @@ function DoctorSISU() {
                     <input className='border mb-2 p-2' id="qualification" type="text" placeholder="qualification*" required=""></input>
                     <input className='border mb-2 p-2' id="experience" type="text" placeholder="experience*" required=""></input>
                     <input className='border mb-2 p-2' type="file" id="img" name="img" accept="image/*" placeholder="upload a profile photo*"></input>
-                    <button className="button pt-2 pb-2 pl-4 pr-4 w-2/4 bg-blue-500 text-white m-2 font-semibold hover:bg-blue-400">Sign Up</button>
+                    <button onClick={handleSubmit} className="button pt-2 pb-2 pl-4 pr-4 w-2/4 bg-blue-500 text-white m-2 font-semibold hover:bg-blue-400">Sign Up</button>
                 </form>
             </div>
 
@@ -66,7 +73,7 @@ function DoctorSISU() {
                     <p className='mb-4'>Sign In</p>
                     <input className='border mb-2 p-2' type="email" name="text" placeholder="Email" required="" id="email"/>
                     <input className='border mb-2 p-2' type="Password" name="text" placeholder="Password" required="" id="password"/>
-                    <button className="button pt-2 pb-2 pl-4 pr-4 w-2/4 bg-blue-500 text-white m-2 font-semibold hover:bg-blue-400">Sign In</button>
+                    <button onClick={handleSubmit} className="button pt-2 pb-2 pl-4 pr-4 w-2/4 bg-blue-500 text-white m-2 font-semibold hover:bg-blue-400">Sign In</button>
                 </form>
             </div>
 

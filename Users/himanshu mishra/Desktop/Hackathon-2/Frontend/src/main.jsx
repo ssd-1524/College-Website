@@ -20,6 +20,7 @@ import Doc5 from './components/Students/DoctorAppointment/DABody/Doc5/Doc5.jsx'
 import Doc6 from './components/Students/DoctorAppointment/DABody/Doc6/Doc6.jsx'
 import ContextProvider from './Context/ContextProvider.jsx'
 import Cart from './components/Students/Shop/Cart/Cart.jsx'
+import Home2 from './components/Doctors/Home2/Home2.jsx'
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path:'/doc',
+    element: <Home2/>
+  }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
