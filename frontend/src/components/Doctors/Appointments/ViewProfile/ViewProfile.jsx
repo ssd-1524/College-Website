@@ -1,6 +1,9 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
+import { FaTimes } from 'react-icons/fa';
+import { Context } from '../../../../Context/Context';
 
 function ViewProfile() {
+  const {visibleProfile, setVisibleProfile} = useContext(Context);
     const [formData, setFormData] = useState({
         name: '',
         age: '',
@@ -18,8 +21,14 @@ function ViewProfile() {
           .join(' ')
           .replace(/\b\w/g, (char) => char.toUpperCase());
     };
+    const closeProfile = () => {
+       // Hide the profile
+    };
   return (
-    <div className="w-1/2 mx-auto p-6 bg-white border rounded-3xl shadow-md flex flex-col justify-start items-start">
+    <div className="w-1/2 mx-auto p-6 bg-white border rounded-3xl shadow-md relative">
+      <FaTimes className="absolute top-4 right-4 text-gray-600 cursor-pointer" 
+              onClick={()=> setVisibleProfile(false)}
+      />
           <form className='w-full'>
             {/* 
             

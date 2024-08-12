@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Context } from "./Context";
 
 const ContextProvider = ({ children }) => {
+  const [visibleProfile, setVisibleProfile] = useState(false);
+  const [prescribe, setPrescribe] = useState(false);
+  const [shifts, setShifts] = useState(false);
   const [cart, setCart] = useState(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart"));
     return storedCart ? storedCart : [];
@@ -43,7 +46,7 @@ const ContextProvider = ({ children }) => {
   };
 
   return (
-    <Context.Provider value={{ cart, addToCart, itemsCount, updateItemCount, removeFromCart }}>
+    <Context.Provider value={{ cart, addToCart, itemsCount, updateItemCount, removeFromCart,visibleProfile, setVisibleProfile, prescribe, setPrescribe, shifts, setShifts }}>
       {children}
     </Context.Provider>
   );

@@ -20,7 +20,7 @@ const availableTimes = [
 ];
 
 function Doc1() {
-    const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState('');
 
   const handleDateChange = (date) => {
@@ -171,6 +171,7 @@ function Doc1() {
           </div>
           <div className="">
             <Calendar
+              className={`rounded-2xl`}
               onChange={handleDateChange}
               value={selectedDate}
               tileClassName={tileClassName}

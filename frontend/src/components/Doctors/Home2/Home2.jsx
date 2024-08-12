@@ -1,13 +1,13 @@
 import React from 'react'
-import Header from '../Header/Header'
 import Card from '../Appointments/Card/Card'
 import Appointments from '../Appointments/Appointments'
 import Queries from '../Queries/Queries'
+import DocHeader from '../DocHeader/DocHeader'
 
 function Home2() {
   return (
     <>
-        <Header/>
+        <DocHeader/>
         <Appointments/>
         <Queries/>
     </>
