@@ -9,12 +9,13 @@ from pydantic import BaseModel
 
 models.database.Base.metadata.create_all(bind=database.engine)
 
-
+#basic template
 class Doctor(BaseModel):
     name: str
     email: str
     qualification: str
     experience: int
+    hashed_password: str
 
 
 class Student(BaseModel):
@@ -22,6 +23,7 @@ class Student(BaseModel):
     email: str
     hostel: str
     room_no: int
+    hashed_password: str
 
 
 class Medicine(BaseModel):
@@ -40,6 +42,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#signup part for doctor
 @app.post('/doctor')
 def create_doctor(request: Doctor, db: Session = Depends(database.get_db)):
     new_doctor = models.Doctor_Info(**dict(request))
@@ -47,6 +50,7 @@ def create_doctor(request: Doctor, db: Session = Depends(database.get_db)):
     db.commit()
     db.refresh(new_doctor)
     return new_doctor
+
 
 @app.post('/student')
 def create_student(request: Student, db: Session = Depends(database.get_db)):
@@ -57,6 +61,7 @@ def create_student(request: Student, db: Session = Depends(database.get_db)):
     return new_student
 
 
+#fetching doctors on the basis of their ids
 @app.get('/doctor/{id}')
 def get_doctor(id: int, db: Session = Depends(database.get_db)):
     doctor = db.query(models.Doctor_Info).filter(models.Doctor_Info.id == id).first()
@@ -77,6 +82,7 @@ def get_student(id: int, db: Session = Depends(database.get_db)):
             detail=f"Student with id {id} not found"
             )
     return student
+
 
 
 @app.delete('/doctor/{id}')
@@ -103,6 +109,7 @@ def delete_student(id: int, db: Session = Depends(database.get_db)):
     db.delete(student)
     db.commit()
     return {"message": "Student deleted successfully"}
+
 
 
 @app.put('/doctor/{id}')
