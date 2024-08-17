@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from typing import Optional
+from fastapi.middleware.cors import CORSMiddleware 
 import models
 import database
 from sqlalchemy.orm import Session
@@ -31,6 +32,13 @@ class Medicine(BaseModel):
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Replace with your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post('/doctor')
 def create_doctor(request: Doctor, db: Session = Depends(database.get_db)):
