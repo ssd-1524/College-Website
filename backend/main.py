@@ -36,10 +36,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Replace with your frontend URL
+    allow_origins=["http://localhost:5173"],  # List of allowed origins
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
 )
 
 #signup part for doctor
@@ -119,10 +119,17 @@ def update_doctor(id: int, request: Doctor, db: Session = Depends(database.get_d
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
             detail=f"Doctor with id {id} not found"
-            )
-    db.query(models.Doctor_Info).filter(models.Doctor_Info.id == id).update(**dict(request))
+        )
+    
+    # Convert the request to a dictionary while excluding unmodifiable fields
+    update_data = request.dict(exclude_unset=True)
+    
+    # Perform the update
+    db.query(models.Doctor_Info).filter(models.Doctor_Info.id == id).update(update_data)
     db.commit()
+    
     return {"message": "Doctor updated successfully"}
+
 
 
 @app.put('/student/{id}')
