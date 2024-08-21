@@ -21,6 +21,8 @@ class Student_Info(database.Base):
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     name = Column(String, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
+    roll_no = Column(String, unique=True, index=True, nullable=False)
+    year = Column(String, unique=True, index=True, nullable=False)
     hostel = Column(String, index=True)
     room_no = Column(Integer, index=True)
     hashed_password = Column(String)

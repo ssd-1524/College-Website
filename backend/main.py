@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 models.database.Base.metadata.create_all(bind=database.engine)
 
-#basic template
+# Basic template
 class Doctor(BaseModel):
     name: str
     email: str
@@ -21,9 +21,11 @@ class Doctor(BaseModel):
 class Student(BaseModel):
     name: str
     email: str
+    roll_no: str
+    year: str
     hostel: str
     room_no: int
-    hashed_password: str
+    password: str
 
 
 class Medicine(BaseModel):
@@ -42,7 +44,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-#signup part for doctor
+# Signup part for doctor
 @app.post('/doctor')
 def create_doctor(request: Doctor, db: Session = Depends(database.get_db)):
     new_doctor = models.Doctor_Info(**dict(request))
@@ -54,14 +56,17 @@ def create_doctor(request: Doctor, db: Session = Depends(database.get_db)):
 
 @app.post('/student')
 def create_student(request: Student, db: Session = Depends(database.get_db)):
-    new_student = models.Student_Info(**dict(request))
+    # Directly store the plain password (NOT recommended in a real-world scenario)
+    student_data = request.dict()
+    student_data["hashed_password"] = student_data.pop("password")  # Rename key
+    new_student = models.Student_Info(**student_data)
     db.add(new_student)
     db.commit()
     db.refresh(new_student)
     return new_student
 
 
-#fetching doctors on the basis of their ids
+# Fetching doctors on the basis of their IDs
 @app.get('/doctor/{id}')
 def get_doctor(id: int, db: Session = Depends(database.get_db)):
     doctor = db.query(models.Doctor_Info).filter(models.Doctor_Info.id == id).first()
@@ -82,7 +87,6 @@ def get_student(id: int, db: Session = Depends(database.get_db)):
             detail=f"Student with id {id} not found"
             )
     return student
-
 
 
 @app.delete('/doctor/{id}')
@@ -111,7 +115,6 @@ def delete_student(id: int, db: Session = Depends(database.get_db)):
     return {"message": "Student deleted successfully"}
 
 
-
 @app.put('/doctor/{id}')
 def update_doctor(id: int, request: Doctor, db: Session = Depends(database.get_db)):
     doctor = db.query(models.Doctor_Info).filter(models.Doctor_Info.id == id).first()
@@ -129,7 +132,6 @@ def update_doctor(id: int, request: Doctor, db: Session = Depends(database.get_d
     db.commit()
     
     return {"message": "Doctor updated successfully"}
-
 
 
 @app.put('/student/{id}')
@@ -200,5 +202,3 @@ def get_medicine_by_name(name: str, db: Session = Depends(database.get_db)):
             detail=f"Medicine with name {name} not found"
             )
     return medicine
-
-
