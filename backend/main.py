@@ -142,9 +142,18 @@ def update_student(id: int, request: Student, db: Session = Depends(database.get
             status_code=status.HTTP_404_NOT_FOUND, 
             detail=f"Student with id {id} not found"
             )
-    db.query(models.Student_Info).filter(models.Student_Info.id == id).update(**dict(request))
+    
+    # Exclude fields that should not be updated
+    update_data = request.dict(exclude_unset=True)
+    
+    # Only update the fields that are allowed
+    allowed_fields = ['name', 'email', 'roll_no', 'year', 'hostel', 'room_no']
+    update_data = {k: v for k, v in update_data.items() if k in allowed_fields}
+    
+    db.query(models.Student_Info).filter(models.Student_Info.id == id).update(update_data)
     db.commit()
     return {"message": "Student updated successfully"}
+
 
 
 @app.post('/medicine')
