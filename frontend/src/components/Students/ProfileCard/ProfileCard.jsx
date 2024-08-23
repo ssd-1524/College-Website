@@ -1,20 +1,46 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { FaPen, FaSave } from 'react-icons/fa';
+import { FaPassport, FaPen, FaSave } from 'react-icons/fa';
+import './loading.css'
 
 const ProfileCard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    mobileNo: '9827546828',
-    Email: 'abc@gmail.com',
-    RollNo: '12102130501015',
-    Year: 'Second',
+    name: '',
+    email: '',
+    roll_no: '',
+    year: '',
+    room_no: '',
   });
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('profileData'));
-    if (storedData) {
-      setProfileData(storedData);
-    }
+      const fetchProfile = async () => {
+        const studentId = localStorage.getItem('studentId');
+        if(studentId){
+          try {
+            const response = await axios.get(`http://localhost:8000/student/${studentId}`);
+            setProfileData({
+              name: response.data.name,
+              email: response.data.email,
+              roll_no: response.data.roll_no,
+              year: response.data.year,
+              room_no: response.data.room_no,
+            });
+          } catch (error) {
+            console.error('Error fetching profile:', error);
+            if (error.response && error.response.status === 404) {
+              alert('Profile not found.');
+            }
+          } finally{
+            setIsLoading(false);
+          }
+        } else{
+          setIsLoading(false);
+        }
+      };
+
+      fetchProfile();
   }, []);
 
   const handleInputChange = (e) => {
@@ -25,11 +51,43 @@ const ProfileCard = () => {
     });
   };
 
-  const handleSave = () => {
-    localStorage.setItem('profileData', JSON.stringify(profileData));
-    setIsEditing(false);
-    alert('All changes have been saved.');
-  };
+// Function to update student data
+const handleSave = async () => {
+  const studentId = localStorage.getItem('studentId');
+  if (studentId) {
+    try {
+      // Fetch the full profile data
+      const { data: fullProfileData } = await axios.get(`http://localhost:8000/student/${studentId}`);
+      
+      // Merge edited fields with the original fields, keeping sensitive data intact
+      const updatedProfileData = {
+        ...fullProfileData,
+        ...profileData,
+        password: fullProfileData.hashed_password, // Keep the existing password or adjust as necessary
+      };
+
+      // Log the data being sent
+      console.log('Data being sent:', updatedProfileData);
+
+      const response = await axios.put(`http://localhost:8000/student/${studentId}`, updatedProfileData);
+
+      if (response.status === 200) {
+        alert('Profile updated successfully.');
+        setIsEditing(false);
+      } else {
+        alert('Failed to update profile. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      if (error.response && error.response.status === 422) {
+        alert('Validation error: Please ensure all fields are filled out correctly.');
+      } else {
+        alert('Error occurred while updating the profile.');
+      }
+    }
+  }
+};
+
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -41,6 +99,14 @@ const ProfileCard = () => {
       .join(' ')
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
+
+  if (isLoading) {
+    return (
+      <div className="spinner-container">
+        <div className="loading-spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
@@ -57,9 +123,22 @@ const ProfileCard = () => {
             </svg>
           </div>
         </div>
-        <h2 className="text-center text-4xl font-bold text-gray-900 mb-7" style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>Drashti Patel</h2>
+        <h2 className="text-center text-4xl font-bold text-gray-900 mb-7" style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>
+          {isEditing ? (
+            <input
+              type="text"
+              value={profileData.name}
+              name="name"
+              onChange={handleInputChange}
+              className="w-full py-1 px-2 text-lg border-b-2 border-black focus:outline-none focus:ring-0"
+              style={{ color: '#000', backgroundColor: 'transparent', borderBottom: '2px solid black' }}
+            />
+          ) : (
+            profileData.name
+          )}
+        </h2>
         <form className="w-full">
-          {Object.keys(profileData).map((field, index) => (
+          {['email', 'roll_no', 'year', 'room_no'].map((field, index) => (
             <div key={index} className="w-full mb-4 flex items-center justify-between">
               <label
                 htmlFor={field}

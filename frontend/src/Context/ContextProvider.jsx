@@ -3,6 +3,7 @@ import { Context } from "./Context";
 
 const ContextProvider = ({ children }) => {
   const [visibleProfile, setVisibleProfile] = useState(false);
+  const [suggestedPills, setSuggestedPills] = useState('');
   const [prescribe, setPrescribe] = useState(false);
   const [shifts, setShifts] = useState(false);
   const [cart, setCart] = useState(() => {
@@ -46,7 +47,7 @@ const ContextProvider = ({ children }) => {
   };
 
   return (
-    <Context.Provider value={{ cart, addToCart, itemsCount, updateItemCount, removeFromCart,visibleProfile, setVisibleProfile, prescribe, setPrescribe, shifts, setShifts }}>
+    <Context.Provider value={{ cart, addToCart, itemsCount, updateItemCount, removeFromCart,visibleProfile, setVisibleProfile, prescribe, setPrescribe, shifts, setShifts, suggestedPills, setSuggestedPills }}>
       {children}
     </Context.Provider>
   );

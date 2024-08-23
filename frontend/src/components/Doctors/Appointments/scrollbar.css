@@ -10,7 +10,7 @@
   
   .scrollbar-custom::-webkit-scrollbar {
     width: 12px;
-    height: 12px;
+    height: 4px;
   }
   
   .scrollbar-custom::-webkit-scrollbar-track {

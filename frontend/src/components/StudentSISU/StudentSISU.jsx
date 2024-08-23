@@ -2,10 +2,25 @@ import React, { useEffect, useState } from 'react';
 import '../DoctorSISU/doctorsisu.css';
 import Popup from '../Popup/Popup';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import bcrypt from 'bcryptjs';
 
 function StudentSISU() {
     const navigate = useNavigate();
     const [isPopupVisible, setPopupVisible] = useState(false);
+    const [signupData, setSignupData] = useState({
+        name: '',
+        email: '',
+        roll_no: '',
+        year: '',
+        hostel: '',
+        room_no: '',
+        password: '',
+    });
+    const [loginData, setLoginData] = useState({
+        email: '',
+        password: ''
+    });
 
     useEffect(() => {
         const signUpButton = document.getElementById('signUp');
@@ -38,35 +53,70 @@ function StudentSISU() {
         changebutton.innerText = "Track Your Ambulance"
     }
 
-    const handleSubmit = (e) => {
+    const handleSignUpChange = (e) => {
+        const { id, value } = e.target;
+        setSignupData((prevData) => ({
+            ...prevData,
+            [id]: value
+        }));
+    };
+    
+
+    const handleLogInChange = (e) =>{
+        const { id, value } = e.target; 
+        setLoginData({ ...loginData, [id]: value });
+    }
+
+    const handleSignUpSubmit = async (e) => {
         e.preventDefault();
-        navigate('/app/pcp')
+        try {
+            const hashedPassword = await bcrypt.hash(signupData.password, 10);
+            const signupDataWithHash = { ...signupData, password: hashedPassword };
+            const response = await axios.post('http://localhost:8000/student', signupDataWithHash);
+            localStorage.setItem('studentId', response.data.id);
+            navigate('/app/pcp');
+        } catch (error) {
+            console.error('Error during signup:', error);
+        }
+    };
+    
+
+    const handleLoginSubmit = async (e) =>{
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:8000/student', signupDataWithHash);
+            localStorage.setItem('studentId', response.data.id);
+            navigate('/app/pcp');
+        } catch (error) {
+            console.error('Error during signup:', error);
+        }
     }
 
     return (
 
-        <div className='w-full h-full flex flex-col justify-center items-center bg-blue-500'>
-            <div className='w-full flex justify-center items-center bg-blue-500'>
+        <div className='w-full h-full flex flex-col justify-center items-center'>
+            <div className='w-full flex justify-center items-center'>
                 <div className="container w-1/2" id="main">
                     <div className="sign-up">
-                        <form action="profile_card.html">
+                        <form onSubmit={handleSignUpSubmit}>
                             <p className='mb-4'>Register</p>
-                            <input className='border mb-2 p-2' id="name" type="text" placeholder="Name*" required=""></input>
-                            <input className='border mb-2 p-2' id="email-signup" type="text" placeholder="Email*" required=""></input>
-                            <input className='border mb-2 p-2' id="password-signup" type="password" placeholder="Password*" required=""></input>
-                            <input className='border mb-2 p-2' id="hostel-name" type="text" placeholder="hostel-name*" required=""></input>
-                            <input className='border mb-2 p-2' id="room-number" type="text" placeholder="room-number*" required=""></input>
-                            <input className='border mb-2 p-2' type="file" id="img" name="img" accept="image/*" placeholder="upload a profile photo*"></input>
-                            <button onClick={handleSubmit} className="button pt-2 pb-2 pl-4 pr-4 w-2/4 bg-blue-500 text-white m-2 font-semibold hover:bg-blue-400">Sign Up</button>
+                            <input className='border mb-2 p-2' id="name" type="text" placeholder="Name*" required value={signupData.name} onChange={handleSignUpChange}></input>
+                            <input className='border mb-2 p-2' id="email" type="email" placeholder="Email*" required value={signupData.email} onChange={handleSignUpChange}></input>
+                            <input className='border mb-2 p-2' id="roll_no" type="text" placeholder="Roll_No*" required value={signupData.roll_no} onChange={handleSignUpChange}></input>
+                            <input className='border mb-2 p-2' id="year" type="text" placeholder="Year*" required value={signupData.year} onChange={handleSignUpChange}></input>
+                            <input className='border mb-2 p-2' id="hostel" type="text" placeholder="hostel-name*" required value={signupData.hostel} onChange={handleSignUpChange}></input>
+                            <input className='border mb-2 p-2' id="room_no" type="number" placeholder="room-number*" required value={signupData.room_no} onChange={handleSignUpChange}></input>
+                            <input className='border mb-2 p-2' id="password" type="password" placeholder="Password*" required value={signupData.password} onChange={handleSignUpChange}></input>
+                            <button className="button pt-2 pb-2 pl-4 pr-4 w-2/4 bg-teal-500 text-white m-2 font-semibold hover:bg-teal-400">Sign Up</button>
                         </form>
                     </div>
 
                     <div className="sign-in">
-                        <form action="profile_card.html">
+                        <form onSubmit={handleLoginSubmit}>
                             <p className='mb-4'>Sign In</p>
-                            <input className='border mb-2 p-2' type="email" name="text" placeholder="Email" required="" id="email" />
-                            <input className='border mb-2 p-2' type="Password" name="text" placeholder="Password" required="" id="password" />
-                            <button onClick={handleSubmit} className="button pt-2 pb-2 pl-4 pr-4 w-2/4 bg-blue-500 text-white m-2 font-semibold hover:bg-blue-400">Sign In</button>
+                            <input className='border mb-2 p-2' type="email" name="text" placeholder="Email" required id="email" value={loginData.email} onChange={handleLogInChange}/>
+                            <input className='border mb-2 p-2' type="Password" name="text" placeholder="Password" required id="password" value={loginData.password} onChange={handleLogInChange}/>
+                            <button className="button pt-2 pb-2 pl-4 pr-4 w-2/4 bg-teal-500 text-white m-2 font-semibold hover:bg-teal-400">Sign In</button>
                         </form>
                     </div>
 

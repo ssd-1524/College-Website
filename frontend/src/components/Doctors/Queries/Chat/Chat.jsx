@@ -1,44 +1,89 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import profile from '../../../../svgs/profile.svg';
 import pill from '../../../../svgs/pill.svg';
 import { FaArrowLeft, FaPaperPlane } from 'react-icons/fa';
-import { CSSTransition } from 'react-transition-group';
 import './chat.css';
 import PillsSuggestion from '../PillsSuggestions/PillsSuggestion';
+import { Context } from '../../../../Context/Context';
+import ViewPrescription from '../ViewPrescription/ViewPrescription';
 
 function Chat({ handle, name }) {
+  const { suggestedPills } = useContext(Context);
   const [viewPills, setViewPills] = useState(false);
+  const [prescribedPills, setPrescribedPills] = useState(false);
+  const [chat, setChat] = useState(true);
+  const [medicines, setMedicines] = useState([]);
+  const [messages, setMessages] = useState([]);
   const mainRef = useRef(null);
+  const textareaRef = useRef(null);
   const pillsRef = useRef(null);
 
   const handlePills = () => {
-    setViewPills((prev) => !prev);
+    if (viewPills) {
+      // If pills suggestion is currently visible, hide it and show the chat
+      setViewPills(false);
+      setChat(true);
+      setPrescribedPills(false);
+    } else {
+      // If pills suggestion is not visible, show it and hide the chat
+      setViewPills(true);
+      setChat(false);
+      setPrescribedPills(false);
+    }
+  };
+  
+  
+  
+  const handleBackClick = () => {
+    if (prescribedPills) {
+      setPrescribedPills(false);
+      setChat(true);
+    } else if (viewPills) {
+      setViewPills(false);
+      setChat(true);
+    }
   };
 
-  const handleChat = (message, className) => {
-    const chatLi = document.createElement('li');
-    chatLi.classList.add('chat', className);
-    let chatContent = className === 'outgoing'
-      ? '<p></p>'
-      : `<img src="${profile}" className='size-10'/><p></p>`;
-    chatLi.innerHTML = chatContent;
-    chatLi.querySelector('p').textContent = message;
-    document.querySelector('.chatbox').appendChild(chatLi);
-    chatLi.scrollIntoView({ behavior: 'smooth' });
-    document.querySelector('textarea').value = ''; // Clear the textarea
-    return chatLi;
+  const handlePrescribedPills = () => {
+    setPrescribedPills(true);  // Show the prescribed pills view
+    setChat(false);            // Hide the chat view
+    setViewPills(false);       // Hide the pills suggestion view
   };
+  
+
+  const handleChat = (message, className, isPrescription = false) => {
+    const newMessage = { message, className, isPrescription };
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+    if (isPrescription) {
+      setMedicines([]); // Clear medicines after sending the prescription
+    }
+
+    setTimeout(() => {
+      if (mainRef.current) {
+        mainRef.current.scrollTop = mainRef.current.scrollHeight;
+      }
+    }, 0); // Ensure chat scrolls to the bottom
+  };
+
+  const handleSendClick = () => {
+    const message = textareaRef.current.value.trim();
+  
+    if (viewPills && suggestedPills.length > 0) {
+      handleChat("Prescription sent", 'outgoing', true);
+      setViewPills(false); // Hide the pills suggestion view
+      setChat(true);       // Show the chat section
+    } else if (message) {
+      handleChat(message, 'outgoing');
+    }
+  
+    textareaRef.current.value = ''; // Clear the textarea after sending the message
+    setViewPills(false);  // Ensure pills suggestion view is closed
+    setChat(true);        // Ensure the chat section is visible
+  };
+  
 
   useEffect(() => {
-    const sendButton = document.getElementById('sent-btn');
-    const handleSendClick = () => {
-      const textarea = document.querySelector('textarea');
-      const message = textarea.value.trim(); // Trim whitespace
-      if (message) {
-        handleChat(message, 'outgoing');
-      }
-    };
-
     const handleClickOutside = (event) => {
       if (pillsRef.current && !pillsRef.current.contains(event.target) && !event.target.closest('.cursor-pointer')) {
         setViewPills(false);
@@ -46,11 +91,9 @@ function Chat({ handle, name }) {
     };
 
     document.addEventListener('click', handleClickOutside);
-    sendButton.addEventListener('click', handleSendClick);
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
-      sendButton.removeEventListener('click', handleSendClick);
     };
   }, []);
 
@@ -60,45 +103,54 @@ function Chat({ handle, name }) {
         <nav className='w-full flex justify-between pl-10 pr-10 pt-3 pb-3'>
           <div className='flex justify-center items-center gap-6'>
             <FaArrowLeft onClick={handle} className='cursor-pointer size-8' />
-            <img src={profile} className='size-14' />
-            <h1 className='flex text-4xl'>{name}</h1>
+            <img src={profile} alt="Profile" className='size-14' />
+            <h1 className='flex text-4xl' style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>{name}</h1>
           </div>
           <div>
-            <img src={pill} onClick={handlePills} className='cursor-pointer' />
+            <img src={pill} alt="Pill" onClick={handlePills} className='cursor-pointer' />
           </div>
         </nav>
       </header>
       <main className='h-96 border overflow-y-auto p-5 scrollbar-custom relative overflow-x-hidden' ref={mainRef}>
-        <ul className="chatbox">
-          <li className="chat incoming">
-            <img src={profile} className='size-10' />
-            <p>Hey There <br /> How can I help you today?</p>
-          </li>
-          <li className="chat outgoing">
-            <p>Hey There <br /> How can I help you today?</p>
-          </li>
-          <li className="chat incoming">
-            <img src={profile} className='size-10' />
-            <p>Hey There <br /> How can I help you today?</p>
-          </li>
-          <li className="chat outgoing">
-            <p>Hey There <br /> How can I help you today?</p>
-          </li>
-        </ul>
-        <CSSTransition
-          in={viewPills}
-          timeout={300}
-          classNames="pills-suggestion"
-          unmountOnExit
-        >
-          <div className='pills-suggestion-wrapper' ref={pillsRef}>
-            <PillsSuggestion />
-          </div>
-        </CSSTransition>
+        {chat && !viewPills && !prescribedPills && (
+          <ul className="chatbox">
+            {messages.map((msg, index) => (
+              <li key={index} className={`chat ${msg.className}`}>
+                {msg.className === 'incoming' && <img src={profile} alt="Profile" className='size-10' />}
+                <p style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>
+                  {msg.message}
+                  <br/>
+                  {msg.isPrescription && (
+                    <button className='view-button w-full border-2 border-slate-200 p-2 bg-teal-100 text-slate-400' onClick={handlePrescribedPills}>
+                      View
+                    </button>
+                  )}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+        {!chat && viewPills && !prescribedPills && (
+          <PillsSuggestion
+            medicines={medicines}
+            setMedicines={setMedicines}
+            readOnly={false}  // Changed to false to allow adding/editing medicines
+          />
+        )}
+        {!chat && !viewPills && prescribedPills && (
+          <ViewPrescription onBack={handleBackClick} />
+        )}
       </main>
       <div className="w-full flex items-center gap-4">
-        <textarea placeholder="Enter the message here.." required className='w-full border p-2 rounded-3xl text-2xl' />
-        <button id="sent-btn" className='border-none'><FaPaperPlane className='size-12 cursor-pointer mr-3' /></button>
+        <textarea
+          placeholder="Enter the message here.."
+          required
+          className='w-full border p-2 rounded-3xl text-2xl'
+          ref={textareaRef}
+        />
+        <button id="sent-btn" className='border-none' onClick={handleSendClick}>
+          <FaPaperPlane className='size-12 cursor-pointer mr-3' />
+        </button>
       </div>
     </div>
   );

@@ -28,15 +28,15 @@ function Queries() {
             <Chat handle={handleBack} name={selectedName} />
           ) : (
             <>
-            {ChatData.map((item)=>( 
+            {ChatData.map((item)=>(
               <div onClick={() => handleChat(item.name)} className='flex items-center justify-between mx-10 my-3 border rounded-xl p-4 cursor-pointer hover:bg-slate-100'>
               <div className='flex items-center gap-5'>
                 <img src={profile} className='size-14' />
                 <div>
-                  <h1 className='text-3xl'>{item.name}</h1>
+                  <h1 className='text-3xl' style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>{item.name}</h1>
                   <div className='flex gap-2'>
-                    <p>{item.query} | </p>
-                    <p>{item.time}</p>
+                    <p style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>{item.query} | </p>
+                    <p style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>{item.time}</p>
                   </div>
               </div>
               </div>

@@ -1,21 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { FaPen, FaSave } from 'react-icons/fa';
+import axios from 'axios';
+import '../../Students/ProfileCard/loading.css'
 
 const DocProfileCard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    mobileNo: '9827546828',
-    Email: 'doctor@gmail.com',
-    RollNo: '12102130501015',
-    Experience: '13 Years',
-    Expertise: "Psychology"
+    name: "",
+    email: '',
+    experience: '',
+    qualification: ''
   });
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('docProfileData'));
-    if (storedData) {
-      setProfileData(storedData);
-    }
+    const fetchProfile = async () => {
+      const doctorId = localStorage.getItem('doctorId');
+      if (doctorId) {
+        try {
+          const response = await axios.get(`http://localhost:8000/doctor/${doctorId}`);
+          // console.log(response);
+          // console.log(response.data);
+          setProfileData({
+            name: response.data.name,
+            email: response.data.email,
+            experience: response.data.experience,
+            qualification: response.data.qualification
+          });
+        } catch (error) {
+          console.error('Error fetching profile:', error);
+          if (error.response && error.response.status === 404) {
+            alert('Doctor profile not found.');
+          }
+        } finally {
+          setIsLoading(false); // Set loading to false after fetching data
+        }
+      } else {
+        setIsLoading(false); // Set loading to false if no doctor ID is found
+      }
+    };
+
+    fetchProfile();
   }, []);
 
   const handleInputChange = (e) => {
@@ -26,11 +51,43 @@ const DocProfileCard = () => {
     });
   };
 
-  const handleSave = () => {
-    localStorage.setItem('docProfileData', JSON.stringify(profileData));
-    setIsEditing(false);
-    alert('All changes have been saved.');
+  const handleSave = async () => {
+    const doctorId = localStorage.getItem('doctorId');
+    if (doctorId) {
+      try {
+        // Fetch the full profile data including fields like hashed_password, created_at, etc.
+        const fullProfileData = await axios.get(`http://localhost:8000/doctor/${doctorId}`);
+  
+        // Merge the edited fields with the unchanged ones
+        const updatedProfileData = {
+          ...fullProfileData.data, // Include all original fields
+          ...profileData, // Overwrite with edited fields
+        };
+  
+        // Log the data being sent
+        console.log('Data being sent:', updatedProfileData);
+  
+        const response = await axios.put(`http://localhost:8000/doctor/${doctorId}`, updatedProfileData);
+  
+        if (response.status === 200) {
+          alert('Profile updated successfully.');
+          setIsEditing(false); // Change back to non-editing mode after save
+        } else {
+          alert('Failed to update profile. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+  
+        if (error.response && error.response.status === 422) {
+          alert('Validation error: Please ensure all fields are filled out correctly.');
+        } else {
+          alert('Error occurred while updating the profile.');
+        }
+      }
+    }
   };
+  
+  
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -42,6 +99,14 @@ const DocProfileCard = () => {
       .join(' ')
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
+
+  if (isLoading) {
+    return (
+      <div className="spinner-container">
+        <div className="loading-spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
@@ -58,9 +123,22 @@ const DocProfileCard = () => {
             </svg>
           </div>
         </div>
-        <h2 className="text-center text-4xl font-bold text-gray-900 mb-7" style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>Doctor WIFI</h2>
+        <h2 className="text-center text-4xl font-bold text-gray-900 mb-7" style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>
+          {isEditing ? (
+            <input
+              type="text"
+              value={profileData.name}
+              name="name"
+              onChange={handleInputChange}
+              className="w-full py-1 px-2 text-lg border-b-2 border-black focus:outline-none focus:ring-0"
+              style={{ color: '#000', backgroundColor: 'transparent', borderBottom: '2px solid black' }}
+            />
+          ) : (
+            profileData.name
+          )}
+        </h2>
         <form className="w-full">
-          {Object.keys(profileData).map((field, index) => (
+          {['email', 'qualification', 'experience'].map((field, index) => (
             <div key={index} className="w-full mb-4 flex items-center justify-between">
               <label
                 htmlFor={field}

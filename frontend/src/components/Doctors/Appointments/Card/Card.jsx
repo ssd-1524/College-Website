@@ -3,7 +3,7 @@ import ViewProfile from '../ViewProfile/ViewProfile';
 import DrPrescribe from '../DrPrescribe/DrPrescribe';
 import { Context } from '../../../../Context/Context';
 
-function Card({name, date, time, symptoms}) {
+function Card({name, date, time, symptoms, index}) {
   const { visibleProfile, setVisibleProfile } = useContext(Context);
   const {prescribe, setPrescribe} = useContext(Context);
   const toggleProfile = () => {
@@ -14,9 +14,8 @@ function Card({name, date, time, symptoms}) {
     setPrescribe(true);
   };
 
-
   return (
-    <div className="w-64 min-w-[16rem] rounded-3xl overflow-hidden shadow-2xl p-4 bg-white m-4">
+    <div className="w-64 min-w-[16rem] rounded-3xl overflow-hidden border-1 shadow-xl p-4 m-4 bg-white" key={index}>
       <div className="mb-4">
         <p className="text-lg font-bold" style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif'}}>Name-: {name}</p>
         <p className="text-lg" style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif'}}>Date-: {date}</p>
