@@ -34,6 +34,13 @@ class Medicine(BaseModel):
     quantity: int
 
 
+class Appointment(BaseModel):
+    doctor_id: int
+    student_id: int
+    date: Optional[str] = None
+    time: Optional[str] = None
+
+
 app = FastAPI()
 
 app.add_middleware(
@@ -78,6 +85,12 @@ def get_doctor(id: int, db: Session = Depends(database.get_db)):
     return doctor
 
 
+@app.get('/doctors/')
+def get_doctors(db: Session = Depends(database.get_db)):
+    doctors = db.query(models.Doctor_Info).all()
+    return doctors
+
+
 @app.get('/student/{id}')
 def get_student(id: int, db: Session = Depends(database.get_db)):
     student = db.query(models.Student_Info).filter(models.Student_Info.id == id).first()
@@ -87,6 +100,12 @@ def get_student(id: int, db: Session = Depends(database.get_db)):
             detail=f"Student with id {id} not found"
             )
     return student
+
+
+@app.get('/students/')
+def get_students(db: Session = Depends(database.get_db)):
+    students = db.query(models.Student_Info).all()
+    return students
 
 
 @app.delete('/doctor/{id}')
@@ -165,6 +184,12 @@ def create_medicine(request: Medicine, db: Session = Depends(database.get_db)):
     return new_medicine
 
 
+@app.get('/medicines/')
+def get_medicines(db: Session = Depends(database.get_db)):
+    medicines = db.query(models.Medicine).all()
+    return medicines
+
+
 @app.get('/medicine/{id}')
 def get_medicine(id: int, db: Session = Depends(database.get_db)):
     medicine = db.query(models.Medicine).filter(models.Medicine.id == id).first()
@@ -211,3 +236,93 @@ def get_medicine_by_name(name: str, db: Session = Depends(database.get_db)):
             detail=f"Medicine with name {name} not found"
             )
     return medicine
+
+@app.get('/doctor_login/{email},{password}')
+def doctor_login(email: str, password: str, db: Session = Depends(database.get_db)):
+    doctor = db.query(models.Doctor_Info).filter(models.Doctor_Info.email == email).first()
+    if doctor is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Doctor with email {email} not found"
+            )
+    if doctor.hashed_password != password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect password"
+        )
+    return doctor
+
+
+@app.get('/student_login/{email},{password}')
+def student_login(email: str, password: str, db: Session = Depends(database.get_db)):
+    student = db.query(models.Student_Info).filter(models.Student_Info.email == email).first()
+    if student is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Student with email {email} not found"
+            )
+    if student.hashed_password != password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect password"
+        )
+    return student
+
+
+@app.post('/appointment')
+def create_appointment(request: Appointment, db: Session = Depends(database.get_db)):
+    new_appointment = models.Appointment(**dict(request))
+    db.add(new_appointment)
+    db.commit()
+    db.refresh(new_appointment)
+    return new_appointment
+
+@app.get('/appointments/')
+def get_appointments(db: Session = Depends(database.get_db)):
+    appointments = db.query(models.Appointment).all()
+    return appointments
+
+@app.get('/appointment/{doc_id}')
+def get_appointment(doc_id: int, db: Session = Depends(database.get_db)):
+    appointment = db.query(models.Appointment).filter(models.Appointment.doctor_id == doc_id).all()
+    if appointment is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Appointment with id {id} not found"
+            )
+    return appointment
+
+@app.get('/appointment/{stu_id}')
+def get_appointment(stu_id: int, db: Session = Depends(database.get_db)):
+    appointment = db.query(models.Appointment).filter(models.Appointment.student_id == stu_id).all()
+    if appointment is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Appointment with id {id} not found"
+            )
+    return appointment
+
+@app.delete('/appointment/{id}')
+def delete_appointment(id: int, db: Session = Depends(database.get_db)):
+    appointment = db.query(models.Appointment).filter(models.Appointment.id == id).first()
+    if appointment is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Appointment with id {id} not found"
+            )
+    db.delete(appointment)
+    db.commit()
+    return {"message": "Appointment deleted successfully"}
+
+@app.put('/appointment/{id}')
+def update_appointment(id: int, request: Appointment, db: Session = Depends(database.get_db)):
+    appointment = db.query(models.Appointment).filter(models.Appointment.id == id).first()
+    if appointment is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f"Appointment with id {id} not found"
+            )
+    db.query(models.Appointment).filter(models.Appointment.id == id).update(**dict(request))
+    db.commit()
+    return {"message": "Appointment updated successfully"}
+

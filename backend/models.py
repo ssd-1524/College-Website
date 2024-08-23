@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String, relationship, ForeignKey, datetime
 from sqlalchemy.sql.expression import null, text
 import database
 from sqlalchemy.sql.sqltypes import TIMESTAMP
@@ -37,3 +37,15 @@ class Medicine(database.Base):
     price = Column(Integer, index=True)
     quantity = Column(Integer, index=True)
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
+
+
+class Appointment(database.Base):
+    __tablename__="Appointment"
+    id = Column(Integer, primary_key=True, index=True)
+    doctor_id = Column(Integer, ForeignKey("Doctor.id", ondelete="CASCADE"), nullable=False)
+    student_id = Column(Integer, ForeignKey("Student.id", ondelete="CASCADE"), nullable=False)
+    date = Column(datetime.date(), nullable=False)
+    time = Column(datetime.time(), nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
+    doctor = relationship("Doctor_Info")
+    student = relationship("Student_Info")
