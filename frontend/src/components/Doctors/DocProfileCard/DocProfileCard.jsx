@@ -118,6 +118,7 @@ const DocProfileCard = () => {
               fill="currentColor"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
+              alt="User avatar placeholder"
             >
               <path d="M24 22.525c0 .81-.658 1.475-1.467 1.475H1.467C.658 24 0 23.334 0 22.525c0-.81.658-1.475 1.467-1.475h21.066c.81 0 1.467.665 1.467 1.475zM9.515 2.786a2.786 2.786 0 1 1 5.572 0 2.786 2.786 0 0 1-5.572 0zM15.49 6.943c-1.63 0-3.062.918-3.83 2.26-.768-1.342-2.2-2.26-3.83-2.26C4.57 6.943 3 8.536 3 10.448v2.695c0 .293.225.532.515.532h17.97c.29 0 .515-.239.515-.532V10.45c0-1.911-1.57-3.504-3.51-3.504z" />
             </svg>
@@ -174,7 +175,7 @@ const DocProfileCard = () => {
               className="py-2 px-4 bg-green-600 text-white rounded-full flex items-center hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               onClick={handleSave}
             >
-              <FaSave className="mr-2" /> Save
+              <FaSave className="mr-2" alt="Save changes icon" /> Save
             </button>
           ) : (
             <button
@@ -182,7 +183,7 @@ const DocProfileCard = () => {
               className="py-2 px-4 bg-blue-600 text-white rounded-full flex items-center hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               onClick={handleEdit}
             >
-              <FaPen className="mr-2" /> Edit
+              <FaPen className="mr-2" alt="Edit profile icon"/> Edit
             </button>
           )}
         </div>

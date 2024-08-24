@@ -104,12 +104,14 @@ function DocShift() {
     <div className='w-1/3 h-4/5 bg-white rounded-lg flex items-center flex-col gap-12 relative'>
       <FaTimes id="shift" className="absolute top-4 right-4 text-gray-600 cursor-pointer" 
               onClick={()=> setShifts(false)}
+              alt='Close prescription modal'
       />
       <div className='w-full flex items-center justify-center mt-10'>
         <Calendar 
           className='rounded-2xl font-semibold text-lg'
           tileClassName={tileClassName}
           onClickDay={handleClick}
+          alt="Calender"
         />
       </div>
       <div className='flex flex-col justify-start w-full px-6'>

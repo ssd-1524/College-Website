@@ -4,10 +4,12 @@ import Popup from '../Popup/Popup';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import bcrypt from 'bcryptjs';
+import TrackAmb from '../DoctorSISU/TrackAmb/TrackAmb';
 
 function StudentSISU() {
     const navigate = useNavigate();
     const [isPopupVisible, setPopupVisible] = useState(false);
+    const [trackAmb, setTrackAmb] = useState(false);
     const [signupData, setSignupData] = useState({
         name: '',
         email: '',
@@ -41,15 +43,30 @@ function StudentSISU() {
         }
     }, []);
 
+    const handleCancleClick = () => {
+        const changebutton = document.querySelector('#Ambulance-Button');
+        changebutton.classList.remove('bg-orange-500');
+        changebutton.classList.add('bg-red-600');
+        changebutton.innerText = "Call an Ambulance"
+        setTrackAmb(false);
+    }
+
     const handleSavePostClick = (event) => {
         event.preventDefault();
-        setPopupVisible(true);
+        if(event.target.innerHTML == "Call an Ambulance"){
+            setPopupVisible(true);
+        }
+        if(event.target.innerHTML == "Track Your Ambulance"){
+            console.log(event.target.innerHTML);
+            setPopupVisible(false);
+            setTrackAmb(true);
+        }
     };
 
     const handleContinue = (event) =>{
         setPopupVisible(false);
         const changebutton = document.querySelector('#Ambulance-Button')
-        changebutton.style.backgroundColor = "Orange";
+        changebutton.classList.add('bg-orange-500');
         changebutton.innerText = "Track Your Ambulance"
     }
 
@@ -142,6 +159,11 @@ function StudentSISU() {
                 isVisible={isPopupVisible}
                 onClose={() => setPopupVisible(false)}
                 onContinue={handleContinue}
+            />
+            <TrackAmb
+                isVisible={trackAmb}
+                onClose={() => setTrackAmb(false)}
+                onCancel = {handleCancleClick}
             />
         </div>
     );

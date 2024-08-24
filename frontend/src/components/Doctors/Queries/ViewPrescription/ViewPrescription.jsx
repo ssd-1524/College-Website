@@ -11,7 +11,7 @@ function ViewPrescription({ onBack }) {
 
   return (
     <div className='w-full h-full bg-white'>
-      <FaArrowLeft className='cursor-pointer' onClick={onBack} />
+      <FaArrowLeft className='cursor-pointer' onClick={onBack} alt="Go Back"/>
       <div className='mt-4 flex flex-col gap-5'>
         {suggestedPills.map((med, index) => (
           <div key={index} className='bg-slate-200 p-6 rounded-lg shadow'>

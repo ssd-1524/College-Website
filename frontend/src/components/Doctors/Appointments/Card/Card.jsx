@@ -38,8 +38,7 @@ function Card({name, date, time, symptoms, index}) {
           Prescribe
         </button>
       </div>
-
-      {/* Render the profile overlay conditionally */}
+      
       {visibleProfile && (
         <div id="profile-overlay" className="mt-16 fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-10">
           <ViewProfile />

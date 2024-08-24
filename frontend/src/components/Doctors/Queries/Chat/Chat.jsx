@@ -113,8 +113,8 @@ function Chat({ handle, name, socket, room}) {
       <header className='w-full sticky border shadow-b-2xl mt-0'>
         <nav className='w-full flex justify-between pl-10 pr-10 pt-3 pb-3'>
           <div className='flex justify-center items-center gap-6'>
-            <FaArrowLeft onClick={handle} className='cursor-pointer size-8' />
-            <img src={profile} alt="Profile" className='size-14' />
+            <FaArrowLeft onClick={handle} className='cursor-pointer size-8' aria-label="Go back" />
+            <img src={profile} alt="Profile icon" className='size-14' />
             <h1 className='flex text-4xl' style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>{name}</h1>
           </div>
           <div>
@@ -160,7 +160,7 @@ function Chat({ handle, name, socket, room}) {
           ref={textareaRef}
         />
         <button id="sent-btn" className='border-none' onClick={handleSendClick}>
-          <FaPaperPlane className='size-12 cursor-pointer mr-3' />
+          <FaPaperPlane className='size-12 cursor-pointer mr-3' aria-label="Send message" />
         </button>
       </div>
     </div>

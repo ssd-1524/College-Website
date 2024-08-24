@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.jpeg'; // Ensure the logo path is correct
 import account from '../../../svgs/youracc.svg';
 import ProfileCard from '../ProfileCard/ProfileCard';
+import Popup from '../../Popup/Popup';
+import TrackAmb from '../../DoctorSISU/TrackAmb/TrackAmb';
+import { FaAmbulance } from 'react-icons/fa';
 
 export default function Header({
   scrollToAppointment,
@@ -11,6 +14,10 @@ export default function Header({
 }) {
   const [activeSection, setActiveSection] = useState('');
   const [profileCard, setProfileCard] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showPopup2, setShowPopup2] = useState(false);
+  const [buttonText, setButtonText] = useState('Call');
+
 
   const toggleCard = () => {
     setProfileCard((prev) => !prev);
@@ -21,6 +28,33 @@ export default function Header({
       setProfileCard(false);
     }
   };
+
+  const handleAmbulanceClick = (e) => {
+    if (e.currentTarget.classList.contains('bg-red-500')) {
+      setShowPopup(true);
+    }
+    if (e.currentTarget.classList.contains('bg-yellow-400')) {
+      setShowPopup2(true);
+    }
+  };
+
+  const handleCancelAmbulance = ()=>{
+    setShowPopup2(false);
+    alert("Your ambulance is canceled")
+    const ambulanceButton = document.querySelector('#ambulance');
+    ambulanceButton.classList.remove('bg-yellow-400');
+    ambulanceButton.classList.add('bg-red-500');
+    setButtonText('Call');
+  }
+
+  const handleContinue = ()=>{
+    setShowPopup(false);
+    alert('Your ambulance is on the way, click on the ambulance symbol to track your ambulance');
+    const ambulanceButton = document.querySelector('#ambulance');
+    ambulanceButton.classList.remove('bg-red-500');
+    ambulanceButton.classList.add('bg-yellow-400');
+    setButtonText('Track');
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -104,6 +138,15 @@ export default function Header({
                   Your Report
                 </button>
               </li>
+              <li>
+                <button
+                  id='ambulance'
+                  onClick={handleAmbulanceClick}
+                  className='bg-red-500 w-auto p-2 text-white flex items-center justify-center gap-5 text-xl'
+                >
+                  {buttonText } <FaAmbulance className='size-7'/>
+                </button>
+              </li>
               <li className="relative">
                 <img onClick={toggleCard} src={account} className="h-16 w-16 cursor-pointer" alt="Account" />
                 {profileCard && (
@@ -115,6 +158,24 @@ export default function Header({
             </ul>
           </div>
         </div>
+        {showPopup && (
+          <div id="profile-overlay" className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+            <Popup
+              isVisible={showPopup}
+              onClose={() => setShowPopup(false)}
+              onContinue= {handleContinue}
+            />
+          </div>
+        )}
+        {showPopup2 && (
+          <div id="profile-overlay" className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+            <TrackAmb
+              isVisible={showPopup2}
+              onClose={() => setShowPopup2(false)}
+              onCancel={handleCancelAmbulance}
+            />
+          </div>
+        )}
       </nav>
     </header>
   );

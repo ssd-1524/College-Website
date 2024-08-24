@@ -28,15 +28,9 @@ function ViewProfile() {
     <div className="w-1/2 mx-auto p-6 bg-white border rounded-3xl shadow-md relative">
       <FaTimes className="absolute top-4 right-4 text-gray-600 cursor-pointer" 
               onClick={()=> setVisibleProfile(false)}
+              alt="Close prescription modal"
       />
           <form className='w-full'>
-            {/* 
-            
-            Object.keys(formData): This method returns an array of the keys in the formData object. The keys are name, age, dateOfBirth, contactNumber, bloodGroup, medications, allergies, and diseases 
-            
-            .map((field, index) => (...)): This iterates over each key in the formData object. The field variable represents each key, and index is the index of the current key in the array.
-
-            */}
             {Object.keys(formData).map((field, index) => (
               <div key={index} className="w-full mb-4 flex items-center justify-between">
                 <label 

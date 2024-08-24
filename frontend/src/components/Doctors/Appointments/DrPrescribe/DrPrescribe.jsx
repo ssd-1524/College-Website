@@ -9,6 +9,7 @@ function DrPrescribe() {
     <div className="w-1/3 mx-auto p-6 bg-white border rounded-3xl shadow-md flex flex-col justify-start items-center relative">
       <FaTimes className="absolute top-4 right-4 text-gray-600 cursor-pointer" 
               onClick={()=> setPrescribe(false)}
+              alt='Close prescription modal'
       />
       <div className='w-full mb-3'>
         <label className="block text-teal-800 mb-5 text-xl text-start">Precautions:</label>

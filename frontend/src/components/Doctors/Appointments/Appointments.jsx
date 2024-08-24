@@ -55,7 +55,7 @@ function Appointments() {
 
   return (
     <div className='m-8'>
-      <h1 className='m-6 text-3xl font-bold text-teal-600 mb-4 underline' style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>Appointments</h1>
+      <h1 className='m-6 mt-10 pt-6 text-4xl font-bold text-teal-600 mb-4 underline' style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>Appointments</h1>
       <div className='flex justify-end'>
         <p className='text-2xl' style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif'}}>Filter: </p>
         <select className='w-auto border rounded-lg text-xl cursor-pointer' onChange={handleDateChange}>
