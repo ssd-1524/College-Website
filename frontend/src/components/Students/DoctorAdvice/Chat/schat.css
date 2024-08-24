@@ -1,11 +1,14 @@
 .chatbox .chat {
     display: flex;
     list-style: none;
+    margin-bottom: 10px;
+    font-family: 'Kaisei HarunoUmi', sans-serif; 
   }
   
   .chatbox .outgoing {
     margin: 20px 0;
     justify-content: flex-end;
+    font-family: 'Kaisei HarunoUmi', sans-serif; 
   }
   
   .chatbox .incoming span {
@@ -18,7 +21,7 @@
     align-self: flex-end;
     background: #09b097;
     border-radius: 4px;
-    margin: 0 10px 7px 0;
+    margin: 0 10px 7px 7px;
   }
   
   .chatbox .chat p {
@@ -30,11 +33,13 @@
     font-size: 0.95rem;
     background: #09b097;
     font-size: 25px;
-    overflow-wrap: break-word;  
+    overflow-wrap: break-word;
+    font-family: 'Kaisei HarunoUmi', sans-serif; 
   }
   
   .chatbox .incoming p {
     border-radius: 0 10px 10px 10px;
+    font-family: 'Kaisei HarunoUmi', sans-serif; 
   }
   
   .chatbox .chat p.error {

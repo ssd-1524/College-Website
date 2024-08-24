@@ -7,7 +7,7 @@ import PillsSuggestion from '../PillsSuggestions/PillsSuggestion';
 import { Context } from '../../../../Context/Context';
 import ViewPrescription from '../ViewPrescription/ViewPrescription';
 
-function Chat({ handle, name }) {
+function Chat({ handle, name, socket, room}) {
   const { suggestedPills } = useContext(Context);
   const [viewPills, setViewPills] = useState(false);
   const [prescribedPills, setPrescribedPills] = useState(false);
@@ -70,10 +70,14 @@ function Chat({ handle, name }) {
     const message = textareaRef.current.value.trim();
   
     if (viewPills && suggestedPills.length > 0) {
+      const prescriptionData = { room, message: "Prescription Sent", medicines: suggestedPills, author: name };
+      socket.emit("send_prescription", prescriptionData);
       handleChat("Prescription sent", 'outgoing', true);
       setViewPills(false); // Hide the pills suggestion view
       setChat(true);       // Show the chat section
     } else if (message) {
+      const messageData = { room, message, author: name};
+      socket.emit("send_message", messageData);
       handleChat(message, 'outgoing');
     }
   
@@ -84,6 +88,13 @@ function Chat({ handle, name }) {
   
 
   useEffect(() => {
+    socket.on("receive_message", (data)=>{
+      console.log(data);
+      if(data.author !== name){
+        console.log(data);
+        handleChat(data.message, 'incoming');
+      }
+    })
     const handleClickOutside = (event) => {
       if (pillsRef.current && !pillsRef.current.contains(event.target) && !event.target.closest('.cursor-pointer')) {
         setViewPills(false);

@@ -36,7 +36,8 @@ function PillsSuggestion({ medicines, setMedicines }) {
 
   useEffect(() => {
     setSuggestedPills(medicines);
-  }, [medicines, setSuggestedPills]);
+    console.log(suggestedPills);
+  }, [medicines, setSuggestedPills, handleAddMedicine]);
 
   return (
     <div className='w-full h-full bg-white p-4 overflow-y-auto'>
@@ -92,9 +93,9 @@ function PillsSuggestion({ medicines, setMedicines }) {
 
       <div className='mt-2 flex flex-wrap gap-2'>
         {timings.map((timing, index) => (
-          <div key={index} className='bg-blue-200 p-2 rounded-lg flex items-center'>
-            <p className='mr-2'>{timing.beforeAfter} {timing.meal}</p>
-            <button onClick={() => handleRemoveTiming(index)} className='text-red-500'>
+          <div key={index} className='bg-blue-200 p-2 rounded-lg flex items-center' >
+            <p className='mr-2 text-lg' style={{ fontFamily: 'Kaisei HarunoUmi, sans-serif' }}>{timing.beforeAfter} {timing.meal}</p>
+            <button onClick={() => handleRemoveTiming(index)} className='text-red-500 p-1 rounded-full size-10 flex justify-center items-center'>
               &times;
             </button>
           </div>

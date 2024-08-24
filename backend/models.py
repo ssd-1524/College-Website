@@ -1,11 +1,12 @@
-from sqlalchemy import Boolean, Column, Integer, String, relationship, ForeignKey, datetime
-from sqlalchemy.sql.expression import null, text
-import database
+from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, text,  Date, Time
 from sqlalchemy.sql.sqltypes import TIMESTAMP
+from sqlalchemy.orm import relationship
+import datetime
+import database
 
 
 class Doctor_Info(database.Base):
-    __tablename__="Doctor"
+    __tablename__ = "Doctor"
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     name = Column(String, index=True)
     qualification = Column(String, index=True)
@@ -17,7 +18,7 @@ class Doctor_Info(database.Base):
 
 
 class Student_Info(database.Base):
-    __tablename__="Student"
+    __tablename__ = "Student"
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     name = Column(String, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
@@ -31,7 +32,7 @@ class Student_Info(database.Base):
 
 
 class Medicine(database.Base):
-    __tablename__="Medicine"
+    __tablename__ = "Medicine"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     price = Column(Integer, index=True)
@@ -40,12 +41,12 @@ class Medicine(database.Base):
 
 
 class Appointment(database.Base):
-    __tablename__="Appointment"
+    __tablename__ = "Appointment"
     id = Column(Integer, primary_key=True, index=True)
     doctor_id = Column(Integer, ForeignKey("Doctor.id", ondelete="CASCADE"), nullable=False)
     student_id = Column(Integer, ForeignKey("Student.id", ondelete="CASCADE"), nullable=False)
-    date = Column(datetime.date(), nullable=False)
-    time = Column(datetime.time(), nullable=False)
+    date = Column(Date, nullable=False)  # Corrected to use SQLAlchemy's Date type
+    time = Column(Time, nullable=False)  # Corrected to use SQLAlchemy's Time type
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
     doctor = relationship("Doctor_Info")
     student = relationship("Student_Info")

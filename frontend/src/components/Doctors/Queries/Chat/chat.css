@@ -1,6 +1,7 @@
 .chatbox .chat {
   display: flex;
   list-style: none;
+  margin-bottom: 10px;
 }
 
 .chatbox .outgoing {
