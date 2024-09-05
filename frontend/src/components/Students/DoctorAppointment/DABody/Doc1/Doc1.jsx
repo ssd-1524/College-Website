@@ -5,10 +5,10 @@ import doctorImage from '../../Images/doc1.jpg'; // Ensure the doctor image path
 import DAHeader from '../../DAHeader/DAHeader';
 
 const availableDates = [
-    new Date(Date.UTC(2024, 6, 5)),
-    new Date(Date.UTC(2024, 6, 11)), // July 6, 2024
-    new Date(Date.UTC(2024, 6, 19)), // July 13, 2024
-    new Date(Date.UTC(2024, 6, 23)), // July 20, 2024
+    new Date(Date.UTC(2024, 8, 5)),
+    new Date(Date.UTC(2024, 8, 11)), // July 6, 2024
+    new Date(Date.UTC(2024, 8, 26)), // July 13, 2024
+    new Date(Date.UTC(2024, 8, 28)), // July 20, 2024
 ];
 
 const availableTimes = [
@@ -91,9 +91,9 @@ function Doc1() {
     if (view === 'month') {
       const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
       if (availableDates.some((availableDate) => availableDate.toDateString() === utcDate.toDateString())) {
-        return 'text-black font-bold';
+        return 'text-black font-bold text-2xl';
       }
-      return 'text-gray-400';
+      return 'text-gray-300';
     }
     return null;
   };
@@ -171,7 +171,7 @@ function Doc1() {
           </div>
           <div className="">
             <Calendar
-              className={`rounded-2xl`}
+              className={`rounded-2xl font-bold`}
               onChange={handleDateChange}
               value={selectedDate}
               tileClassName={tileClassName}

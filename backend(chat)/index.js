@@ -30,8 +30,7 @@ io.on("connection", (socket) => {
 
   socket.on("send_prescription", (data) => {
     console.log("prescription sent: ",data);
-    console.log("prescription sent: ",data.timing);
-    io.to(data.room).emit("receive_prescription", { room: data.room, message: data.message, isPrescription: true, medicines: data.medicines });
+    io.to(data.room).emit("receive_prescription", data);
   });
 
   socket.on("disconnect", () => {

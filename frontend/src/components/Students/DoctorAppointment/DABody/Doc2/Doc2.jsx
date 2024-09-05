@@ -5,10 +5,10 @@ import doctorImage from '../../Images/Doc2.jpg'; // Ensure the doctor image path
 import DAHeader from '../../DAHeader/DAHeader';
 
 const availableDates = [
-    new Date(Date.UTC(2024, 6, 5)),
-    new Date(Date.UTC(2024, 6, 11)), // July 6, 2024
-    new Date(Date.UTC(2024, 6, 19)), // July 13, 2024
-    new Date(Date.UTC(2024, 6, 23)), // July 20, 2024
+  new Date(Date.UTC(2024, 8, 5)),
+  new Date(Date.UTC(2024, 8, 11)), // July 6, 2024
+  new Date(Date.UTC(2024, 8, 26)), // July 13, 2024
+  new Date(Date.UTC(2024, 8, 28)), // July 20, 2024
 ];
 
 const availableTimes = [
