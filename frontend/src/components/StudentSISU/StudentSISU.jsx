@@ -3,7 +3,6 @@ import '../DoctorSISU/doctorsisu.css';
 import Popup from '../Popup/Popup';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import bcrypt from 'bcryptjs';
 import TrackAmb from '../DoctorSISU/TrackAmb/TrackAmb';
 
 function StudentSISU() {
