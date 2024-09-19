@@ -43,30 +43,15 @@ function StudentSISU() {
         }
     }, []);
 
-    const handleCancleClick = () => {
-        const changebutton = document.querySelector('#Ambulance-Button');
-        changebutton.classList.remove('bg-orange-500');
-        changebutton.classList.add('bg-red-600');
-        changebutton.innerText = "Call an Ambulance"
-        setTrackAmb(false);
-    }
-
     const handleSavePostClick = (event) => {
         event.preventDefault();
-        if(event.target.innerHTML == "Call an Ambulance"){
-            setPopupVisible(true);
-        }
-        if(event.target.innerHTML == "Track Your Ambulance"){
-            console.log(event.target.innerHTML);
-            setPopupVisible(false);
-            setTrackAmb(true);
-        }
+        setPopupVisible(true);
     };
 
     const handleContinue = (event) =>{
         setPopupVisible(false);
         const changebutton = document.querySelector('#Ambulance-Button')
-        changebutton.classList.add('bg-orange-500');
+        changebutton.style.backgroundColor = "Orange";
         changebutton.innerText = "Track Your Ambulance"
     }
 
@@ -87,13 +72,10 @@ function StudentSISU() {
     const handleSignUpSubmit = async (e) => {
         e.preventDefault();
         try {
-            const hashedPassword = await bcrypt.hash(signupData.password, 10);
-            const signupDataWithHash = { ...signupData, password: hashedPassword };
-            const response = await axios.post('http://localhost:8000/student', signupDataWithHash);
-            localStorage.setItem('studentId', response.data.id);
+            const response = await axios.post('/api/v1/students/register', signupData);
             navigate('/app/pcp');
         } catch (error) {
-            console.error('Error during signup:', error);
+            alert('Error during signup:', error);
         }
     };
     
@@ -101,12 +83,20 @@ function StudentSISU() {
     const handleLoginSubmit = async (e) =>{
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/student', signupDataWithHash);
+            const response = await axios.post('/api/v1/students/login', loginData);
             localStorage.setItem('studentId', response.data.id);
             navigate('/app/pcp');
         } catch (error) {
             console.error('Error during signup:', error);
         }
+    }
+    
+    const handleCancleClick = () => {
+        const changebutton = document.querySelector('#Ambulance-Button');
+        changebutton.classList.remove('bg-orange-500');
+        changebutton.classList.add('bg-red-600');
+        changebutton.innerText = "Call an Ambulance"
+        setTrackAmb(false);
     }
 
     return (
